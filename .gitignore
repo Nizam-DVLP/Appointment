@@ -20,6 +20,16 @@
 # production
 /build
 
+
+
+    // -----------------------------------
+    // 💼 Position (Main role)
+    // -----------------------------------
+    firstPage.drawText(data.position, {
+      x: 287,
+      y: height - 296,
+      ...textOptions,
+    });  
 # misc
 .DS_Store
 *.pem
