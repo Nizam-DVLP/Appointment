@@ -1,11 +1,14 @@
 "use client";
+
 import React, { useState, useRef, useEffect } from "react";
 import { PDFDocument, rgb, StandardFonts } from "pdf-lib";
+
+// ✅ Component Imports
 import UploadSection from "../../../componets/OfferLetter/UploadSection";
 import EmployeeForm from "../../../componets/OfferLetter/EmployeeForm";
 import ActionButtons from "../../../componets/OfferLetter/ActionButtons";
 import InstructionsBox from "../../../componets/OfferLetter/InstructionsBox";
-import Avatar from "../../../componets/OfferLetter/Redirect"; // ✅ Avatar import
+import Avatar from "../../../componets/OfferLetter/Redirect";
 
 export default function AppointmentLetterGenerator() {
   const [data, setData] = useState({
@@ -31,12 +34,14 @@ export default function AppointmentLetterGenerator() {
   const [isProcessing, setIsProcessing] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
+  // ✅ Cleanup object URLs on unmount
   useEffect(() => {
     return () => {
       if (editedPdfUrl) URL.revokeObjectURL(editedPdfUrl);
     };
   }, [editedPdfUrl]);
 
+  // ✅ Handle form data change
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
   ) => {
@@ -44,6 +49,7 @@ export default function AppointmentLetterGenerator() {
     setData((prev) => ({ ...prev, [name]: value }));
   };
 
+  // ✅ Handle PDF upload
   const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (file && file.type === "application/pdf") {
@@ -54,6 +60,7 @@ export default function AppointmentLetterGenerator() {
     }
   };
 
+  // ✅ Fill the PDF with form data
   const fillPdfTemplate = async () => {
     if (!pdfFile) return alert("Please upload a PDF template first");
     if (!data.name || !data.joiningDate || !data.salary)
@@ -69,6 +76,7 @@ export default function AppointmentLetterGenerator() {
       const boldFont = await pdfDoc.embedFont(StandardFonts.HelveticaBold);
       const { height } = firstPage.getSize();
 
+      // ✅ Mapping text to coordinates
       const textMappings = [
         { text: data.currentDate, x: 475, y: height - 230, size: 11, font },
         { text: data.name, x: 95, y: height - 258, size: 12, font: boldFont },
@@ -94,9 +102,12 @@ export default function AppointmentLetterGenerator() {
         }
       });
 
+      // ✅ Fixed TypeScript error here
       const pdfBytesModified = await pdfDoc.save();
-      const blob = new Blob([pdfBytesModified], { type: "application/pdf" });
+      const blob = new Blob([new Uint8Array(pdfBytesModified)], { type: "application/pdf" });
       const url = URL.createObjectURL(blob);
+
+      if (editedPdfUrl) URL.revokeObjectURL(editedPdfUrl);
       setEditedPdfUrl(url);
     } catch (err) {
       console.error("Error editing PDF:", err);
@@ -106,8 +117,10 @@ export default function AppointmentLetterGenerator() {
     }
   };
 
+  // ✅ Handle generate button
   const handleSubmit = () => fillPdfTemplate();
 
+  // ✅ Download generated PDF
   const downloadPdf = () => {
     if (!editedPdfUrl) return;
     const link = document.createElement("a");
@@ -116,6 +129,7 @@ export default function AppointmentLetterGenerator() {
     link.click();
   };
 
+  // ✅ Reset form and state
   const resetForm = () => {
     setData({
       name: "",
@@ -146,12 +160,15 @@ export default function AppointmentLetterGenerator() {
         <h1 className="text-3xl font-bold text-center text-gray-800 mb-6">
           Offer Letter Generator
         </h1>
+
         <UploadSection
           fileInputRef={fileInputRef}
           pdfFile={pdfFile}
           handleFileUpload={handleFileUpload}
         />
+
         <EmployeeForm data={data} handleChange={handleChange} />
+
         <ActionButtons
           isProcessing={isProcessing}
           pdfFile={pdfFile}
@@ -160,6 +177,7 @@ export default function AppointmentLetterGenerator() {
           onDownload={downloadPdf}
           onReset={resetForm}
         />
+
         <InstructionsBox />
       </div>
 
