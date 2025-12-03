@@ -109,7 +109,7 @@ export default function AppointmentLetterPage(): JSX.Element {
     });
     firstPage.drawText(data.totalSalary, {
       x: 120,
-      y: height - 420,
+      y: height - 620,
       ...textOptions,
     });
 

@@ -25,167 +25,187 @@ const EmployeeForm: React.FC<EmployeeFormProps> = ({ data, handleChange }) => {
   const totalAnnual = totalMonthly * 12;
 
   return (
-    <div className="mb-8 bg-white shadow-md rounded-2xl p-8 border border-gray-200 w-full overflow-y-auto">
-      <h3 className="text-2xl font-semibold text-black mb-6 text-center">
-        Step 2: Fill Employee Details
-      </h3>
+    <div className="mb-8 bg-gradient-to-br from-white to-blue-50 shadow-xl rounded-3xl p-8 border border-blue-100 w-full overflow-y-auto">
+      <div className="text-center mb-8">
+        <h3 className="text-3xl font-bold text-gray-800 mb-2">
+          Step 2: Fill Employee Details
+        </h3>
+        <p className="text-gray-500 text-sm">Complete the information below to generate the offer letter</p>
+      </div>
 
       {/* Employee Info */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-10">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-10">
         {/* Left */}
-        <div className="space-y-4">
-          <h4 className="font-semibold text-black border-b pb-2">
-            Personal Information
-          </h4>
+        <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 hover:shadow-md transition-shadow">
+          <div className="flex items-center gap-2 mb-5">
+            <div className="w-10 h-10 bg-indigo-100 rounded-lg flex items-center justify-center">
+              <span className="text-indigo-600 text-xl">👤</span>
+            </div>
+            <h4 className="font-semibold text-gray-800 text-lg">
+              Personal Information
+            </h4>
+          </div>
+          <div className="space-y-4">
+            <label className="block">
+              <span className="text-sm font-medium text-gray-700 mb-2 block">
+                Full Name <span className="text-red-500">*</span>
+              </span>
+              <input
+                type="text"
+                name="name"
+                value={data.name}
+                onChange={handleChange}
+                placeholder="Enter full name"
+                className="w-full p-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none transition-all hover:border-gray-300 bg-gray-50 focus:bg-white"
+                required
+              />
+            </label>
 
-          <label className="block text-sm text-black mb-1">
-            Full Name *
-            <input
-              type="text"
-              name="name"
-              value={data.name}
-              onChange={handleChange}
-              placeholder="Enter full name "
-              className="w-full mt-1 p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 outline-none"
-              required
-            />
-          </label>
-
-          <label className="block text-sm text-gray-600 mb-1">
-            Date *
-            <input
-              type="date"
-              name="date"
-              value={data.date}
-              onChange={handleChange}
-              className="w-full mt-1 p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 outline-none"
-              required
-            />
-          </label>
-          <label className="block text-sm text-gray-600 mb-1">
-            Salary
-            <input
-              type="text"
-              name="salary"
-              value={data.salary}
-              onChange={handleChange}
-              placeholder=""
-              className="w-full mt-1 p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 outline-none"
-            />
-          </label>
+            <label className="block">
+              <span className="text-sm font-medium text-gray-700 mb-2 block">
+                Date <span className="text-red-500">*</span>
+              </span>
+              <input
+                type="date"
+                name="date"
+                value={data.date}
+                onChange={handleChange}
+                className="w-full p-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none transition-all hover:border-gray-300 bg-gray-50 focus:bg-white"
+                required
+              />
+            </label>
+          </div>
         </div>
 
         {/* Right */}
-        <div className="space-y-4">
-          <h4 className="font-semibold text-gray-700 border-b pb-2">
-            Job Information
-          </h4>
+        <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 hover:shadow-md transition-shadow">
+          <div className="flex items-center gap-2 mb-5">
+            <div className="w-10 h-10 bg-emerald-100 rounded-lg flex items-center justify-center">
+              <span className="text-emerald-600 text-xl">💼</span>
+            </div>
+            <h4 className="font-semibold text-gray-800 text-lg">
+              Job Information
+            </h4>
+          </div>
+          <div className="space-y-4">
+            <label className="block">
+              <span className="text-sm font-medium text-gray-700 mb-2 block">
+                Position <span className="text-red-500">*</span>
+              </span>
+              <input
+                type="text"
+                name="position"
+                value={data.position}
+                onChange={handleChange}
+                placeholder="e.g., Business Development Associate"
+                className="w-full p-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-transparent outline-none transition-all hover:border-gray-300 bg-gray-50 focus:bg-white"
+                required
+              />
+            </label>
 
-          <label className="block text-sm text-gray-600 mb-1">
-            Position *
-            <input
-              type="text"
-              name="position"
-              value={data.position}
-              onChange={handleChange}
-              placeholder="e.g., Business Development Associate"
-              className="w-full mt-1 p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 outline-none"
-              required
-            />
-          </label>
+            <label className="block">
+              <span className="text-sm font-medium text-gray-700 mb-2 block">
+                Joining Date <span className="text-red-500">*</span>
+              </span>
+              <input
+                type="date"
+                name="joiningDate"
+                value={data.joiningDate}
+                onChange={handleChange}
+                placeholder="Select joining date"
+                className="w-full p-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-transparent outline-none transition-all hover:border-gray-300 bg-gray-50 focus:bg-white"
+                required
+              />
+            </label>
 
-          <label className="block text-sm text-gray-600 mb-1">
-            Joining Date *
-            <input
-              type="date"
-              name="joiningDate"
-              value={data.joiningDate}
-              onChange={handleChange}
-              placeholder="Select joining date"
-              className="w-full mt-1 p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 outline-none"
-              required
-            />
-          </label>
-
-          <label className="block text-sm text-gray-600 mb-1">
-            Probation Period (in months)
-            <input
-              type="text"
-              name="probationMonths"
-              value={data.probationMonths}
-              onChange={handleChange}
-              placeholder="e.g., 3–6 months"
-              className="w-full mt-1 p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 outline-none"
-            />
-          </label>
-          
+            <label className="block">
+              <span className="text-sm font-medium text-gray-700 mb-2 block">
+                Probation Period (in months)
+              </span>
+              <input
+                type="text"
+                name="probationMonths"
+                value={data.probationMonths}
+                onChange={handleChange}
+                placeholder="e.g., 3–6 months"
+                className="w-full p-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-transparent outline-none transition-all hover:border-gray-300 bg-gray-50 focus:bg-white"
+              />
+            </label>
+          </div>
         </div>
       </div>
 
       {/* 💰 Salary Section */}
-      <div className="mt-2">
-        <h4 className="font-semibold text-gray-700 border-b pb-2 mb-4">
-          Salary Details (Enter by HR)
-        </h4>
-
-        {/* Input for total salary */}
-        <div className="mb-6">
-          <label className="block text-sm text-gray-600 mb-1 font-medium">
-            Enter Total Monthly Salary (₹)
-          </label>
-          <input
-            type="number"
-            name="totalSalary"
-            value={data.totalSalary}
-            onChange={handleChange}
-            placeholder="Enter total monthly salary"
-            className="w-60 p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 outline-none"
-          />
+      <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
+        <div className="flex items-center gap-2 mb-6">
+          <div className="w-10 h-10 bg-amber-100 rounded-lg flex items-center justify-center">
+            <span className="text-amber-600 text-xl">💰</span>
+          </div>
+          <h4 className="font-semibold text-gray-800 text-lg">
+            Salary Details
+          </h4>
         </div>
 
-        <div className="overflow-x-auto">
-          <table className="min-w-full border border-gray-300 text-sm text-gray-700 bg-white">
-            <thead className="bg-blue-100 text-gray-800">
+        {/* Input for total salary */}
+        <div className="mb-6 bg-gradient-to-r from-indigo-50 to-blue-50 p-5 rounded-xl border border-indigo-100">
+          <label className="block">
+            <span className="text-sm font-medium text-gray-700 mb-2 block">
+              Enter Total Monthly Salary (₹)
+            </span>
+            <input
+              type="number"
+              name="totalSalary"
+              value={data.totalSalary}
+              onChange={handleChange}
+              placeholder="Enter total monthly salary"
+              className="w-full md:w-80 p-3 border border-indigo-200 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none transition-all text-lg font-semibold text-gray-800 bg-white"
+            />
+          </label>
+        </div>
+
+        <div className="overflow-x-auto rounded-xl border border-gray-200">
+          <table className="min-w-full text-sm text-gray-700 bg-white">
+            <thead className="bg-gradient-to-r from-indigo-500 to-blue-500 text-white">
               <tr>
-                <th className="border p-3 text-left">Components</th>
-                <th className="border p-3 text-center">Monthly (₹)</th>
-                <th className="border p-3 text-center">Annual (₹)</th>
+                <th className="border-b border-indigo-400 p-4 text-left font-semibold">Components</th>
+                <th className="border-b border-indigo-400 p-4 text-center font-semibold">Monthly (₹)</th>
+                <th className="border-b border-indigo-400 p-4 text-center font-semibold">Annual (₹)</th>
               </tr>
             </thead>
             <tbody>
-              <tr className="bg-blue-50 font-semibold">
-                <td className="border p-3">Fixed Pay</td>
-                <td colSpan={2}></td>
+              <tr className="bg-indigo-50">
+                <td className="border-b border-gray-200 p-4 font-bold text-indigo-900">Fixed Pay</td>
+                <td className="border-b border-gray-200" colSpan={2}></td>
               </tr>
 
-              <tr>
-                <td className="border p-3">Basic Pay (50%)</td>
-                <td className="border p-3 text-center">{basic.toFixed(2)}</td>
-                <td className="border p-3 text-center">{(basic * 12).toFixed(2)}</td>
+              <tr className="hover:bg-gray-50 transition-colors">
+                <td className="border-b border-gray-200 p-4 pl-8">Basic Pay (50%)</td>
+                <td className="border-b border-gray-200 p-4 text-center font-medium">{basic.toFixed(2)}</td>
+                <td className="border-b border-gray-200 p-4 text-center font-medium">{(basic * 12).toFixed(2)}</td>
               </tr>
 
-              <tr>
-                <td className="border p-3">HRA (40% of Basic)</td>
-                <td className="border p-3 text-center">{hra.toFixed(2)}</td>
-                <td className="border p-3 text-center">{(hra * 12).toFixed(2)}</td>
+              <tr className="hover:bg-gray-50 transition-colors">
+                <td className="border-b border-gray-200 p-4 pl-8">HRA (40% of Basic)</td>
+                <td className="border-b border-gray-200 p-4 text-center font-medium">{hra.toFixed(2)}</td>
+                <td className="border-b border-gray-200 p-4 text-center font-medium">{(hra * 12).toFixed(2)}</td>
               </tr>
 
-              <tr>
-                <td className="border p-3">Conveyance Allowance</td>
-                <td className="border p-3 text-center">{conveyance.toFixed(2)}</td>
-                <td className="border p-3 text-center">{(conveyance * 12).toFixed(2)}</td>
+              <tr className="hover:bg-gray-50 transition-colors">
+                <td className="border-b border-gray-200 p-4 pl-8">Conveyance Allowance</td>
+                <td className="border-b border-gray-200 p-4 text-center font-medium">{conveyance.toFixed(2)}</td>
+                <td className="border-b border-gray-200 p-4 text-center font-medium">{(conveyance * 12).toFixed(2)}</td>
               </tr>
 
-              <tr>
-                <td className="border p-3">Special Allowance</td>
-                <td className="border p-3 text-center">{special.toFixed(2)}</td>
-                <td className="border p-3 text-center">{(special * 12).toFixed(2)}</td>
+              <tr className="hover:bg-gray-50 transition-colors">
+                <td className="border-b border-gray-200 p-4 pl-8">Special Allowance</td>
+                <td className="border-b border-gray-200 p-4 text-center font-medium">{special.toFixed(2)}</td>
+                <td className="border-b border-gray-200 p-4 text-center font-medium">{(special * 12).toFixed(2)}</td>
               </tr>
 
-              <tr className="bg-blue-50 font-semibold">
-                <td className="border p-3">Total</td>
-                <td className="border p-3 text-center">{totalMonthly.toFixed(2)}</td>
-                <td className="border p-3 text-center">{totalAnnual.toFixed(2)}</td>
+              <tr className="bg-gradient-to-r from-emerald-500 to-green-500 text-white font-bold">
+                <td className="p-4">Total</td>
+                <td className="p-4 text-center text-lg">₹ {totalMonthly.toFixed(2)}</td>
+                <td className="p-4 text-center text-lg">₹ {totalAnnual.toFixed(2)}</td>
               </tr>
             </tbody>
           </table>
