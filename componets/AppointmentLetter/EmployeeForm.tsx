@@ -63,7 +63,7 @@ const EmployeeForm: React.FC<EmployeeFormProps> = ({ data, handleChange }) => {
 
             <label className="block">
               <span className="text-sm font-medium text-gray-700 mb-2 block">
-                Date <span className="text-red-500">*</span>
+               Date of Joining  <span className="text-red-500">*</span>
               </span>
               <input
                 type="date"
@@ -105,7 +105,7 @@ const EmployeeForm: React.FC<EmployeeFormProps> = ({ data, handleChange }) => {
 
             <label className="block">
               <span className="text-sm font-medium text-gray-700 mb-2 block">
-                Joining Date <span className="text-red-500">*</span>
+                Allocated Date <span className="text-red-500">*</span>
               </span>
               <input
                 type="date"

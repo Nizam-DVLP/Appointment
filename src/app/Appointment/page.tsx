@@ -22,6 +22,43 @@ interface EmployeeData {
   commencementDate: string;
 }
 
+// 🔹 Helper to draw multi-line / wrapped text
+const drawWrappedText = (
+  page: any,
+  text: string,
+  x: number,
+  y: number,
+  maxWidth: number,
+  options: { size: number; font: any; color: any },
+  lineHeight: number = options.size + 2
+) => {
+  if (!text) return;
+
+  const words = text.split(" ");
+  let line = "";
+  let currentY = y;
+
+  for (const word of words) {
+    const testLine = line ? `${line} ${word}` : word;
+    const testWidth = options.font.widthOfTextAtSize(
+      testLine,
+      options.size
+    );
+
+    if (testWidth > maxWidth && line) {
+      page.drawText(line, { x, y: currentY, ...options });
+      line = word;
+      currentY -= lineHeight; // go DOWN to next line
+    } else {
+      line = testLine;
+    }
+  }
+
+  if (line) {
+    page.drawText(line, { x, y: currentY, ...options });
+  }
+};
+
 export default function AppointmentLetterPage(): JSX.Element {
   const [pdfFile, setPdfFile] = useState<File | null>(null);
   const [editedPdfUrl, setEditedPdfUrl] = useState<string | null>(null);
@@ -85,7 +122,7 @@ export default function AppointmentLetterPage(): JSX.Element {
     const firstPage = pages[0];
     const font = await pdfDoc.embedFont(StandardFonts.Helvetica);
     const fontBold = await pdfDoc.embedFont(StandardFonts.HelveticaBold);
-    const textOptions = { size: 12, font, color: rgb(0, 0, 0) };
+    const textOptions = { size: 10, font, color: rgb(0, 0, 0) };
     const { height } = firstPage.getSize();
 
     // 🗓️ Date
@@ -97,21 +134,26 @@ export default function AppointmentLetterPage(): JSX.Element {
 
     // 👤 Name / Position / Salary
     firstPage.drawText(data.name, { x: 100, y: height - 262, ...textOptions });
-    firstPage.drawText(data.position, {
-      x: 288,
-      y: height - 296,
-      ...textOptions,
-    });
-    firstPage.drawText(data.position, {
-      x: 172,
-      y: height - 402,
-      ...textOptions,
-    });
-    firstPage.drawText(data.totalSalary, {
-      x: 120,
-      y: height - 620,
-      ...textOptions,
-    });
+
+    // 🔹 Position near the top paragraph (wrapped)
+    drawWrappedText(
+      firstPage,
+      data.position,
+      288,              // same X as before
+      height - 296,     // same Y as before
+      230,              // max width in that line
+      textOptions
+    );
+
+    // 🔹 Position in the commencement section (wrapped)
+    drawWrappedText(
+      firstPage,
+      data.position,
+      180,              // same X as before
+      height - 402,     // same Y as before
+      260,              // little wider area here
+      textOptions
+    );
 
     firstPage.drawText(formatDate(data.joiningDate), {
       x: 460,
