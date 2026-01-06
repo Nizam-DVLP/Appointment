@@ -265,9 +265,9 @@ firstPage.drawText(data.name, {
     });
 
     fifthPage.drawText(`INR ${totalLPA.toFixed(2)} LPA`, {
-      x: 170,
+      x: 160,
       y: h5 - 128,
-      size: 10,
+      size: 11,
       font: fontBold,
       color: rgb(0, 0, 0),
     });
