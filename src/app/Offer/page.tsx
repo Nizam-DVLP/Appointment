@@ -79,11 +79,11 @@ export default function AppointmentLetterGenerator() {
       // ✅ Mapping text to coordinates
       const textMappings = [
         { text: data.currentDate, x: 475, y: height - 230, size: 11, font },
-        { text: data.name, x: 95, y: height - 258, size: 12, font: boldFont },
+        { text: data.name, x: 95, y: height - 258, size: 12,font:boldFont },
         { text: data.position, x: 250, y: height - 325, size: 12, font: boldFont },
         { text: data.joiningDate, x: 250, y: height - 338, size: 11, font },
         { text: data.joiningDate, x: 340, y: height - 406, size: 11, font: boldFont },
-        { text: `INR ${data.salary}`, x: 165, y: height - 555, size: 11, font },
+        { text: `INR ${data.salary}`, x: 165, y: height - 555, size: 10, font },
         { text: data.positionBranch, x: 250, y: height - 352, size: 11, font },
         { text: data.probationPeriod, x: 165, y: height - 662, size: 11, font },
         { text: data.modeOfWork, x: 145, y: height - 568, size: 11, font },
@@ -154,7 +154,7 @@ export default function AppointmentLetterGenerator() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-900 p-6 md:p-10 flex flex-col md:flex-row items-start justify-between gap-10">
+    <div className="min-h-screen bg-gray-900 p-6 md:p-10 flex flex-col md:flex-row items-start justify-between gap-10 ">
       {/* Left Section - Form */}
       <div className="flex-1 bg-white rounded-2xl shadow-xl p-8 border border-gray-200">
         <h1 className="text-3xl font-bold text-center text-gray-800 mb-6">

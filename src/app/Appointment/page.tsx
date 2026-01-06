@@ -132,28 +132,45 @@ export default function AppointmentLetterPage(): JSX.Element {
       ...textOptions,
     });
 
-    // 👤 Name / Position / Salary
-    firstPage.drawText(data.name, { x: 100, y: height - 262, ...textOptions });
+    // 👤 Name 
+firstPage.drawText(data.name, {
+  x: 100,
+  y: height - 262,
+  size: 11,
+  font: fontBold, // ✅ correct variable
+  color: rgb(0, 0, 0),
+});
+
 
     // 🔹 Position near the top paragraph (wrapped)
-    drawWrappedText(
-      firstPage,
-      data.position,
-      288,              // same X as before
-      height - 296,     // same Y as before
-      230,              // max width in that line
-      textOptions
-    );
+   drawWrappedText(
+  firstPage,
+  data.position,
+  288,              // X
+  height - 296,     // Y
+  230,              // max width
+  {
+    size: 11,
+    font: fontBold, // ✅ bold font
+    color: rgb(0, 0, 0),
+  }
+);
+
 
     // 🔹 Position in the commencement section (wrapped)
-    drawWrappedText(
-      firstPage,
-      data.position,
-      180,              // same X as before
-      height - 402,     // same Y as before
-      260,              // little wider area here
-      textOptions
-    );
+   drawWrappedText(
+  firstPage,
+  data.position,
+  173,              // X
+  height - 402,     // Y
+  260,              // max width
+  {
+    ...textOptions,
+    font: fontBold, // ✅ bold font
+    size: 11,       // optional
+  }
+);
+  
 
     firstPage.drawText(formatDate(data.joiningDate), {
       x: 460,
@@ -163,10 +180,11 @@ export default function AppointmentLetterPage(): JSX.Element {
 
     // 🧾 Probation Period
     firstPage.drawText(`${data.probationMonths}`, {
-      x: 205,
+      x: 206,
       y: height - 548,
       ...textOptions,
       size: 11,
+      font: fontBold,
     });
 
     // 📄 PAGE 4 → Salary Breakdown Table
@@ -249,7 +267,7 @@ export default function AppointmentLetterPage(): JSX.Element {
     fifthPage.drawText(`INR ${totalLPA.toFixed(2)} LPA`, {
       x: 170,
       y: h5 - 128,
-      size: 12,
+      size: 10,
       font: fontBold,
       color: rgb(0, 0, 0),
     });
