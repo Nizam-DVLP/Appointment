@@ -1,9 +1,9 @@
 "use client";
 
-import React, { useState, useRef, JSX } from "react";
+import React, { useState, JSX, useEffect } from "react";
 import { PDFDocument, rgb, StandardFonts } from "pdf-lib";
 
-// ✅ Components
+// Components
 import UploadSection from "../../../componets/AppointmentLetter/UploadSection";
 import EmployeeForm from "../../../componets/AppointmentLetter/EmployeeForm";
 import ActionButtons from "../../../componets/AppointmentLetter/ActionButtons";
@@ -22,7 +22,7 @@ interface EmployeeData {
   commencementDate: string;
 }
 
-// 🔹 Helper to draw multi-line / wrapped text
+// Helper
 const drawWrappedText = (
   page: any,
   text: string,
@@ -40,29 +40,24 @@ const drawWrappedText = (
 
   for (const word of words) {
     const testLine = line ? `${line} ${word}` : word;
-    const testWidth = options.font.widthOfTextAtSize(
-      testLine,
-      options.size
-    );
+    const testWidth = options.font.widthOfTextAtSize(testLine, options.size);
 
     if (testWidth > maxWidth && line) {
       page.drawText(line, { x, y: currentY, ...options });
       line = word;
-      currentY -= lineHeight; // go DOWN to next line
+      currentY -= lineHeight;
     } else {
       line = testLine;
     }
   }
 
-  if (line) {
-    page.drawText(line, { x, y: currentY, ...options });
-  }
+  if (line) page.drawText(line, { x, y: currentY, ...options });
 };
 
 export default function AppointmentLetterPage(): JSX.Element {
-  const [pdfFile, setPdfFile] = useState<File | null>(null);
   const [editedPdfUrl, setEditedPdfUrl] = useState<string | null>(null);
   const [isProcessing, setIsProcessing] = useState<boolean>(false);
+  const [templatePdf, setTemplatePdf] = useState<ArrayBuffer | null>(null);
 
   const [data, setData] = useState<EmployeeData>({
     date: "",
@@ -76,28 +71,19 @@ export default function AppointmentLetterPage(): JSX.Element {
     commencementDate: "",
   });
 
-  const fileInputRef = useRef<HTMLInputElement | null>(null) as React.RefObject<HTMLInputElement>;
+  // Load template automatically
+  useEffect(() => {
+    fetch("/templates/Mock appointment letter.docx .docx.pdf")
+      .then(res => res.arrayBuffer())
+      .then(buffer => setTemplatePdf(buffer));
+  }, []);
 
-  // ✅ Upload handler
-  const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>): void => {
-    const file = e.target.files?.[0];
-    if (file && file.type === "application/pdf") {
-      setPdfFile(file);
-    } else {
-      alert("Please upload a valid PDF file.");
-    }
-  };
-
-  // ✅ Input change
   const handleChange = (
-    e: React.ChangeEvent<
-      HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
-    >
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>
   ): void => {
     setData({ ...data, [e.target.name]: e.target.value });
   };
 
-  // ✅ Format date as DD/MM/YYYY
   const formatDate = (dateStr: string): string => {
     if (!dateStr) return "";
     const date = new Date(dateStr);
@@ -107,16 +93,13 @@ export default function AppointmentLetterPage(): JSX.Element {
     ).padStart(2, "0")}/${date.getFullYear()}`;
   };
 
-  // ✅ Currency formatter
   const formatCurrency = (value: number): string =>
     value.toLocaleString("en-IN", { maximumFractionDigits: 0 });
 
-  // ✅ PDF Fill
   const fillPdfTemplate = async (pdfBytes: ArrayBuffer): Promise<Uint8Array> => {
     const pdfDoc = await PDFDocument.load(pdfBytes);
     const pages = pdfDoc.getPages();
 
-    // Ensure at least 5 pages
     while (pages.length < 5) pdfDoc.addPage();
 
     const firstPage = pages[0];
@@ -125,52 +108,27 @@ export default function AppointmentLetterPage(): JSX.Element {
     const textOptions = { size: 10, font, color: rgb(0, 0, 0) };
     const { height } = firstPage.getSize();
 
-    // 🗓️ Date
-    firstPage.drawText(formatDate(data.date), {
-      x: 345,
-      y: height - 358,
-      ...textOptions,
+    firstPage.drawText(formatDate(data.date), { x: 345, y: height - 358, ...textOptions });
+
+    firstPage.drawText(data.name, {
+      x: 100,
+      y: height - 262,
+      size: 11,
+      font: fontBold,
+      color: rgb(0, 0, 0),
     });
 
-    // 👤 Name 
-firstPage.drawText(data.name, {
-  x: 100,
-  y: height - 262,
-  size: 11,
-  font: fontBold, // ✅ correct variable
-  color: rgb(0, 0, 0),
-});
+    drawWrappedText(firstPage, data.position, 288, height - 296, 230, {
+      size: 11,
+      font: fontBold,
+      color: rgb(0, 0, 0),
+    });
 
-
-    // 🔹 Position near the top paragraph (wrapped)
-   drawWrappedText(
-  firstPage,
-  data.position,
-  288,              // X
-  height - 296,     // Y
-  230,              // max width
-  {
-    size: 11,
-    font: fontBold, // ✅ bold font
-    color: rgb(0, 0, 0),
-  }
-);
-
-
-    // 🔹 Position in the commencement section (wrapped)
-   drawWrappedText(
-  firstPage,
-  data.position,
-  173,              // X
-  height - 402,     // Y
-  260,              // max width
-  {
-    ...textOptions,
-    font: fontBold, // ✅ bold font
-    size: 11,       // optional
-  }
-);
-  
+    drawWrappedText(firstPage, data.position, 173, height - 402, 260, {
+      ...textOptions,
+      font: fontBold,
+      size: 11,
+    });
 
     firstPage.drawText(formatDate(data.joiningDate), {
       x: 460,
@@ -178,7 +136,6 @@ firstPage.drawText(data.name, {
       ...textOptions,
     });
 
-    // 🧾 Probation Period
     firstPage.drawText(`${data.probationMonths}`, {
       x: 206,
       y: height - 548,
@@ -187,7 +144,6 @@ firstPage.drawText(data.name, {
       font: fontBold,
     });
 
-    // 📄 PAGE 4 → Salary Breakdown Table
     const fourthPage = pdfDoc.getPages()[3];
     const { height: h4 } = fourthPage.getSize();
 
@@ -199,70 +155,36 @@ firstPage.drawText(data.name, {
     const annualMultiplier = 12;
 
     const startY = h4 - 549.6;
-    const labelOptions = { size: 11.5, font, color: rgb(0, 0, 0) };
-    const valueOptions = { size: 11.5, font, color: rgb(0, 0, 0) };
 
-    const drawRow = (
-      label: string,
-      monthly: string,
-      annual: string,
-      y: number,
-      bold = false
-    ): void => {
-      fourthPage.drawText(label, {
-        x: 70,
-        y,
-        ...(bold ? { ...labelOptions, font: fontBold, size: 12 } : labelOptions),
-      });
+    const drawRow = (monthly: string, annual: string, y: number, bold = false) => {
       fourthPage.drawText(monthly, {
         x: 290,
         y,
-        ...(bold ? { ...valueOptions, font: fontBold, size: 12 } : valueOptions),
+        size: bold ? 12 : 11.5,
+        font: bold ? fontBold : font,
+        color: rgb(0, 0, 0),
       });
       fourthPage.drawText(annual, {
         x: 430,
         y,
-        ...(bold ? { ...valueOptions, font: fontBold, size: 12 } : valueOptions),
+        size: bold ? 12 : 11.5,
+        font: bold ? fontBold : font,
+        color: rgb(0, 0, 0),
       });
     };
 
     const gap = 19.5;
-    const yFixedHeader = startY;
 
-    const yBasic = yFixedHeader - 25;
-    drawRow("", formatCurrency(basic), formatCurrency(basic * annualMultiplier), yBasic);
+    drawRow(formatCurrency(basic), formatCurrency(basic * annualMultiplier), startY - 25);
+    drawRow(formatCurrency(hra), formatCurrency(hra * annualMultiplier), startY - 44.5);
+    drawRow(formatCurrency(conveyance), formatCurrency(conveyance * annualMultiplier), startY - 64);
+    drawRow(formatCurrency(specialAllowance), formatCurrency(specialAllowance * annualMultiplier), startY - 83.5);
+    drawRow(formatCurrency(totalSalary), formatCurrency(totalSalary * annualMultiplier), startY - 98, true);
 
-    const yHRA = yBasic - gap;
-    drawRow("", formatCurrency(hra), formatCurrency(hra * annualMultiplier), yHRA);
-
-    const yConveyance = yHRA - gap;
-    drawRow("", formatCurrency(conveyance), formatCurrency(conveyance * annualMultiplier), yConveyance);
-
-    const ySpecial = yConveyance - gap;
-    drawRow("", formatCurrency(specialAllowance), formatCurrency(specialAllowance * annualMultiplier), ySpecial);
-
-    const yTotal = ySpecial - gap * 0.8;
-    drawRow("", formatCurrency(totalSalary), formatCurrency(totalSalary * annualMultiplier), yTotal, true);
-
-    const yIncentives = yTotal - gap;
-    drawRow("", "-", "-", yIncentives);
-
-    const yCTC = yIncentives - gap;
-    drawRow("", formatCurrency(totalSalary), formatCurrency(totalSalary * annualMultiplier), yCTC, true);
-
-    // 📄 PAGE 5 → "Salary & Bonus Structure"
     const fifthPage = pdfDoc.getPages()[4];
     const { height: h5 } = fifthPage.getSize();
 
     const totalLPA = (totalSalary * 12) / 100000;
-
-    fifthPage.drawRectangle({
-      x: 158,
-      y: h5 - 725,
-      width: 120,
-      height: 16,
-      color: rgb(1, 1, 1),
-    });
 
     fifthPage.drawText(`INR ${totalLPA.toFixed(2)} LPA`, {
       x: 160,
@@ -272,36 +194,24 @@ firstPage.drawText(data.name, {
       color: rgb(0, 0, 0),
     });
 
-    const updatedPdfBytes = await pdfDoc.save();
-    return updatedPdfBytes;
+    return await pdfDoc.save();
   };
 
-  // ✅ Generate PDF
   const handleSubmit = async (): Promise<void> => {
-    if (!pdfFile) {
-      alert("Please upload a PDF first.");
-      return;
-    }
-    setIsProcessing(true);
-    try {
-      const arrayBuffer = await pdfFile.arrayBuffer();
-      const editedBytes = await fillPdfTemplate(arrayBuffer);
+    if (!templatePdf) return alert("Template not loaded");
 
-      // Create blob directly from Uint8Array
-      const buffer = Buffer.from(editedBytes);
-      const blob = new Blob([buffer], { type: "application/pdf" });
-      const url = URL.createObjectURL(blob);
-      setEditedPdfUrl(url);
+    setIsProcessing(true);
+
+    try {
+      const editedBytes = await fillPdfTemplate(templatePdf);
+      const blob = new Blob([editedBytes], { type: "application/pdf" });
+      setEditedPdfUrl(URL.createObjectURL(blob));
       alert("✅ Appointment Letter generated successfully!");
-    } catch (err) {
-      console.error(err);
-      alert("Error generating the PDF.");
     } finally {
       setIsProcessing(false);
     }
   };
 
-  // ✅ Download
   const downloadPdf = (): void => {
     if (!editedPdfUrl) return;
     const link = document.createElement("a");
@@ -310,12 +220,7 @@ firstPage.drawText(data.name, {
     link.click();
   };
 
-  // ✅ Reset
-  const resetForm = (): void => {
-    setPdfFile(null);
-    setEditedPdfUrl(null);
-    if (fileInputRef.current) fileInputRef.current.value = "";
-  };
+  const resetForm = (): void => setEditedPdfUrl(null);
 
   return (
     <div className="min-h-screen bg-gray-900 p-6 md:p-10 flex flex-col md:flex-row items-start justify-between gap-10">
@@ -324,20 +229,19 @@ firstPage.drawText(data.name, {
           Appointment Letter Generator
         </h1>
 
-        <UploadSection
-          pdfFile={pdfFile}
-          onUpload={handleFileUpload}
-          fileInputRef={fileInputRef}
-        />
+        <UploadSection pdfReady={!!templatePdf} />
+
         <EmployeeForm data={data} handleChange={handleChange} />
+
         <ActionButtons
           onGenerate={handleSubmit}
           onDownload={downloadPdf}
           onReset={resetForm}
           isProcessing={isProcessing}
-          hasPdf={!!pdfFile}
+          hasPdf={!!templatePdf}
           canDownload={!!editedPdfUrl}
         />
+
         <InstructionCard />
       </div>
 
