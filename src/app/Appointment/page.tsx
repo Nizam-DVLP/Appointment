@@ -108,42 +108,47 @@ export default function AppointmentLetterPage(): JSX.Element {
     const textOptions = { size: 10, font, color: rgb(0, 0, 0) };
     const { height } = firstPage.getSize();
 
-    firstPage.drawText(formatDate(data.date), { x: 345, y: height - 358, ...textOptions });
-
+    firstPage.drawText(formatDate(data.date), { x: 346, y: height - 326.7 ,  ...textOptions });
+    //Name 
     firstPage.drawText(data.name, {
       x: 100,
-      y: height - 263,
+      y: height - 233,
       size: 11,
       font: fontBold,
       color: rgb(0, 0, 0),
     });
+     
 
-    drawWrappedText(firstPage, data.position, 288, height - 296, 230, {
+    //We are pleased to offer you, the position of
+    drawWrappedText(firstPage, data.position, 288, height - 265.6, 600, {
       size: 11,
       font: fontBold,
       color: rgb(0, 0, 0),
     });
-
-    drawWrappedText(firstPage, data.position, 173, height - 402, 260, {
+     
+    //Job title 
+    drawWrappedText(firstPage, data.position, 173, height - 370, 370, {
       ...textOptions,
       font: fontBold,
       size: 11,
     });
-
+     // First Date: 
     firstPage.drawText(formatDate(data.joiningDate), {
       x: 460,
-      y: height - 214,
+      y: height - 200,
       ...textOptions,
+      
     });
-
+    
+    // Probation period
     firstPage.drawText(`${data.probationMonths}`, {
-      x: 206,
-      y: height - 548,
+      x: 207,
+      y: height - 512,
       ...textOptions,
       size: 11,
       font: fontBold,
     });
-
+  
     const fourthPage = pdfDoc.getPages()[3];
     const { height: h4 } = fourthPage.getSize();
 
@@ -175,11 +180,11 @@ export default function AppointmentLetterPage(): JSX.Element {
 
     const gap = 19.5;
 
-    drawRow(formatCurrency(basic), formatCurrency(basic * annualMultiplier), startY - 25);
-    drawRow(formatCurrency(hra), formatCurrency(hra * annualMultiplier), startY - 44.5);
-    drawRow(formatCurrency(conveyance), formatCurrency(conveyance * annualMultiplier), startY - 64);
-    drawRow(formatCurrency(specialAllowance), formatCurrency(specialAllowance * annualMultiplier), startY - 83.5);
-    drawRow(formatCurrency(totalSalary), formatCurrency(totalSalary * annualMultiplier), startY - 98, true);
+    drawRow(formatCurrency(basic), formatCurrency(basic * annualMultiplier), startY - 17);
+    drawRow(formatCurrency(hra), formatCurrency(hra * annualMultiplier), startY - 36.5);
+    drawRow(formatCurrency(conveyance), formatCurrency(conveyance * annualMultiplier), startY - 52);
+    drawRow(formatCurrency(specialAllowance), formatCurrency(specialAllowance * annualMultiplier), startY - 71);
+    drawRow(formatCurrency(totalSalary), formatCurrency(totalSalary * annualMultiplier), startY - 88,);
 
     const fifthPage = pdfDoc.getPages()[4];
     const { height: h5 } = fifthPage.getSize();
@@ -188,8 +193,8 @@ export default function AppointmentLetterPage(): JSX.Element {
 
     fifthPage.drawText(`INR ${totalLPA.toFixed(2)} LPA`, {
       x: 160,
-      y: h5 - 127.5,
-      size: 9,
+      y: h5 - 84,
+      size: 11,
       font: fontBold,
       color: rgb(0, 0, 0),
     });
