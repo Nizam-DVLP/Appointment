@@ -73,7 +73,7 @@ export default function AppointmentLetterPage(): JSX.Element {
 
   // Load template automatically
   useEffect(() => {
-    fetch("/templates/mock-appointment-letter.pdf")
+    fetch("/templates/Appointment letter IEH.docx.pdf")
       .then(res => res.arrayBuffer())
       .then(buffer => setTemplatePdf(buffer));
   }, []);
@@ -193,9 +193,9 @@ export default function AppointmentLetterPage(): JSX.Element {
 
     fifthPage.drawText(`INR ${totalLPA.toFixed(2)} LPA`, {
       x: 160,
-      y: h5 - 84,
-      size: 11,
-      font: fontBold,
+      y: h5 - 83,
+      size: 9,
+      font:font,
       color: rgb(0, 0, 0),
     });
 
